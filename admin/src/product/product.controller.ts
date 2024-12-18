@@ -6,16 +6,24 @@ import {
   Param,
   Patch,
   Delete,
+  Inject,
 } from '@nestjs/common';
 import { Product } from './entity/product.entity';
 import { ProductsService } from './product.service';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    @Inject('PRODUCT_SERVICE') private readonly client: ClientProxy,
+  ) {}
+
+  // Add rabbitMQ event for microservices
 
   @Get()
   findAll(): Promise<Product[]> {
+    this.client.emit('hello', 'Hello from RabbitMQ!'); // send event to RabbitMQ
     return this.productsService.findAll();
   }
 
