@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './product.service';
 import { Product } from './schema/product.schema';
+import { EventPattern } from '@nestjs/microservices';
 
 @Controller('products')
 export class ProductsController {
@@ -40,5 +41,11 @@ export class ProductsController {
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Product> {
     return this.productsService.delete(id);
+  }
+
+  // ===================== RABBITMQ ========================
+  @EventPattern('hello')
+  async hello(data: string) {
+    console.log('Received event  : ', data);
   }
 }
