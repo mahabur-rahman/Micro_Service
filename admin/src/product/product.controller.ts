@@ -20,10 +20,9 @@ export class ProductsController {
   ) {}
 
   // Add rabbitMQ event for microservices
-
   @Get()
   findAll(): Promise<Product[]> {
-    this.client.emit('hello', 'Hello from RabbitMQ!'); // send event to RabbitMQ
+    this.client.emit('hello', 'Hello from RabbitMq!'); // send event to RabbitMQ
     return this.productsService.findAll();
   }
 

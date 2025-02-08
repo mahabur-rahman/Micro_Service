@@ -10,6 +10,6 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
   });
 
-  await app.listen(process.env.PORT ?? 8000);
+  await app.listen(process.env.PORT ?? 8000); // it is not graphql ok : postgres with typeOrm
 }
 bootstrap();
