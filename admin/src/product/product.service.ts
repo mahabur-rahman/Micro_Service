@@ -10,25 +10,30 @@ export class ProductsService {
     private productRepository: Repository<Product>,
   ) {}
 
-  findAll(): Promise<Product[]> {
-    return this.productRepository.find();
-  }
+  // findAll(): Promise<Product[]> {
+  //   return this.productRepository.find();
+  // }
 
-  findOne(id: number): Promise<Product> {
-    return this.productRepository.findOneBy({ id });
-  }
+  // findOne(id: number): Promise<Product> {
+  //   return this.productRepository.findOneBy({ id });
+  // }
 
-  create(product: Partial<Product>): Promise<Product> {
+  // create(product: Partial<Product>): Promise<Product> {
+  //   const newProduct = this.productRepository.create(product);
+  //   return this.productRepository.save(newProduct);
+  // }
+
+  async create(product: Partial<Product>): Promise<Product> {
     const newProduct = this.productRepository.create(product);
     return this.productRepository.save(newProduct);
   }
 
-  async update(id: number, product: Partial<Product>): Promise<Product> {
-    await this.productRepository.update(id, product);
-    return this.productRepository.findOneBy({ id });
-  }
+  // async update(id: number, product: Partial<Product>): Promise<Product> {
+  //   await this.productRepository.update(id, product);
+  //   return this.productRepository.findOneBy({ id });
+  // }
 
-  async remove(id: number): Promise<void> {
-    await this.productRepository.delete(id);
-  }
+  // async remove(id: number): Promise<void> {
+  //   await this.productRepository.delete(id);
+  // }
 }

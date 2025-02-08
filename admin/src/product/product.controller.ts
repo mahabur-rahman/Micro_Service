@@ -21,23 +21,32 @@ export class ProductsController {
   ) {}
 
   // Add rabbitMQ event for microservices
-  @Get()
-  findAll(): Promise<Product[]> {
-    this.client.emit('hello', 'Hello from RabbitMq!'); // send event to RabbitMQ
-    return this.productsService.findAll();
-  }
+  // @Get()
+  // findAll(): Promise<Product[]> {
+  //   this.client.emit('hello', 'Hello from RabbitMq!'); // send event to RabbitMQ
+  //   return this.productsService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: number): Promise<Product> {
-    return this.productsService.findOne(id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: number): Promise<Product> {
+  //   return this.productsService.findOne(id);
+  // }
+
+  // @Post()
+  // create(@Body() product: Partial<Product>): Promise<Product> {
+  //   const products = this.productsService.create(product);
+
+  //   this.client.emit('product_created', products);
+  //   return products;
+  // }
 
   @Post()
-  create(@Body() product: Partial<Product>): Promise<Product> {
-    const products = this.productsService.create(product);
+  async create(@Body() product: Partial<Product>): Promise<Product> {
+    const createdProduct = await this.productsService.create(product);
 
-    this.client.emit('product_created', products);
-    return products;
+    this.client.emit('product_created', createdProduct); // Emit the created product to RabbitMQ
+
+    return createdProduct;
   }
 
   // @Patch(':id')
@@ -52,22 +61,22 @@ export class ProductsController {
   //   return findProduct;
   // }
 
-  @Patch(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() product: Partial<Product>,
-  ): Promise<Product> {
-    const updatedProduct = await this.productsService.update(id, product);
+  // @Patch(':id')
+  // async update(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() product: Partial<Product>,
+  // ): Promise<Product> {
+  //   const updatedProduct = await this.productsService.update(id, product);
 
-    this.client.emit('updated_product', updatedProduct);
+  //   this.client.emit('updated_product', updatedProduct);
 
-    return updatedProduct;
-  }
+  //   return updatedProduct;
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    this.productsService.remove(id);
+  // @Delete(':id')
+  // remove(@Param('id') id: number) {
+  //   this.productsService.remove(id);
 
-    this.client.emit('product_deleted', id);
-  }
+  //   this.client.emit('product_deleted', id);
+  // }
 }
