@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   Inject,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Product } from './entity/product.entity';
 import { ProductsService } from './product.service';
@@ -33,19 +34,40 @@ export class ProductsController {
 
   @Post()
   create(@Body() product: Partial<Product>): Promise<Product> {
-    return this.productsService.create(product);
+    const products = this.productsService.create(product);
+
+    this.client.emit('product_created', products);
+    return products;
   }
 
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: number,
+  //   @Body() product: Partial<Product>,
+  // ): Promise<Product> {
+  //   const updatedProduct = this.productsService.update(id, product);
+
+  //   const findProduct = this.productsService.findById(id);
+  //   this.client.emit('updated_product', findProduct);
+  //   return findProduct;
+  // }
+
   @Patch(':id')
-  update(
-    @Param('id') id: number,
+  async update(
+    @Param('id', ParseIntPipe) id: number,
     @Body() product: Partial<Product>,
   ): Promise<Product> {
-    return this.productsService.update(id, product);
+    const updatedProduct = await this.productsService.update(id, product);
+
+    this.client.emit('updated_product', updatedProduct);
+
+    return updatedProduct;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.productsService.remove(id);
+  remove(@Param('id') id: number) {
+    this.productsService.remove(id);
+
+    this.client.emit('product_deleted', id);
   }
 }

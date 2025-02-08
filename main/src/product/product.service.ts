@@ -9,10 +9,10 @@ export class ProductsService {
     @InjectModel(Product.name) private productModel: Model<Product>,
   ) {}
 
-  // async create(productDto: any): Promise<Product> {
-  //   const newProduct = new this.productModel(productDto);
-  //   return newProduct.save();
-  // }
+  async create(productDto: any): Promise<Product> {
+    const newProduct = new this.productModel(productDto);
+    return newProduct.save();
+  }
 
   async findAll(): Promise<Product[]> {
     return this.productModel.find().exec();

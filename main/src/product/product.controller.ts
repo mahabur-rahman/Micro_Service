@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Put,
-  Delete,
-} from '@nestjs/common';
+import { Body, Controller, Get } from '@nestjs/common';
 import { ProductsService } from './product.service';
 import { Product } from './schema/product.schema';
 import { EventPattern } from '@nestjs/microservices';
@@ -15,10 +7,17 @@ import { EventPattern } from '@nestjs/microservices';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  // @Post()
-  // async create(@Body() productDto: any): Promise<Product> {
-  //   return this.productsService.create(productDto);
-  // }
+  @EventPattern('product_created')
+  async create(@Body() product: any): Promise<Product> {
+    console.log(product);
+    return this.productsService.create({
+      id: 1,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      quantity: product.quantity,
+    });
+  }
 
   @Get()
   async findAll(): Promise<Product[]> {
