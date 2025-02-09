@@ -28,12 +28,12 @@ export class ProductsService {
     return this.productRepository.save(newProduct);
   }
 
-  // async update(id: number, product: Partial<Product>): Promise<Product> {
-  //   await this.productRepository.update(id, product);
-  //   return this.productRepository.findOneBy({ id });
-  // }
+  async update(id: number, product: Partial<Product>): Promise<Product> {
+    await this.productRepository.update(id, product);
+    return this.productRepository.findOneBy({ id });
+  }
 
-  // async remove(id: number): Promise<void> {
-  //   await this.productRepository.delete(id);
-  // }
+  async remove(id: number): Promise<void> {
+    await this.productRepository.delete(id);
+  }
 }

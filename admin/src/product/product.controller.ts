@@ -4,10 +4,10 @@ import {
   Post,
   Body,
   Param,
-  Patch,
   Delete,
   Inject,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { Product } from './entity/product.entity';
 import { ProductsService } from './product.service';
@@ -32,14 +32,6 @@ export class ProductsController {
   //   return this.productsService.findOne(id);
   // }
 
-  // @Post()
-  // create(@Body() product: Partial<Product>): Promise<Product> {
-  //   const products = this.productsService.create(product);
-
-  //   this.client.emit('product_created', products);
-  //   return products;
-  // }
-
   @Post()
   async create(@Body() product: Partial<Product>): Promise<Product> {
     const createdProduct = await this.productsService.create(product);
@@ -49,34 +41,22 @@ export class ProductsController {
     return createdProduct;
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: number,
-  //   @Body() product: Partial<Product>,
-  // ): Promise<Product> {
-  //   const updatedProduct = this.productsService.update(id, product);
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() product: Partial<Product>,
+  ): Promise<Product> {
+    const updatedProduct = await this.productsService.update(id, product);
 
-  //   const findProduct = this.productsService.findById(id);
-  //   this.client.emit('updated_product', findProduct);
-  //   return findProduct;
-  // }
+    this.client.emit('updated_product', updatedProduct);
 
-  // @Patch(':id')
-  // async update(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() product: Partial<Product>,
-  // ): Promise<Product> {
-  //   const updatedProduct = await this.productsService.update(id, product);
+    return updatedProduct;
+  }
 
-  //   this.client.emit('updated_product', updatedProduct);
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    this.productsService.remove(id);
 
-  //   return updatedProduct;
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: number) {
-  //   this.productsService.remove(id);
-
-  //   this.client.emit('product_deleted', id);
-  // }
+    this.client.emit('product_deleted', id);
+  }
 }
